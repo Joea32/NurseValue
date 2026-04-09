@@ -677,8 +677,8 @@ HTML = """
   position: fixed;
   top: 12px;
   right: 12px;
-  width: 80px;
-  height: 80px;
+  width: 300px;
+  height: 300px;
   object-fit: contain;
   z-index: 999;
 }
