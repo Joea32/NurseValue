@@ -686,16 +686,16 @@ HTML = """
       .panel, .card, .big-vision, .side-message, .signup-box, .footer-card { padding: 20px; }
       .nav-links { width: 100%; justify-content: flex-start; }
       .logo, .brand-badge { width: 46px; height: 46px; }
+
       .floating-logo {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  width: 70px;
-  height: auto;
+  top: 12px;
+  right: 12px;
+  width: 40px;   /* 👈 smaller */
+  height: 40px;  /* 👈 keep it square */
+  object-fit: contain;
   z-index: 999;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-  }
+}
 
 </style>
 </head>
