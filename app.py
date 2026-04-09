@@ -1260,20 +1260,17 @@ def demo():
         band = request.form["band"]
         global_avg = get_global_average(band)
 
-        if global_avg > 0:
-            gap = max(0, int(((global_avg - salary) / global_avg) * 100))
-        else:
-            gap = 0
+        gap = max(0, int(((global_avg - salary) / global_avg) * 100))
 
         if gap > 30:
-            insight = "You appear to be significantly underpaid compared to stronger international benchmarks for similar nursing roles."
+            insight = "You appear to be significantly underpaid compared to stronger international benchmarks."
         elif gap > 10:
-            insight = "You may be underpaid compared to international benchmarks, depending on role, setting, and working conditions."
+            insight = "You may be underpaid compared to international benchmarks."
         else:
-            insight = "Your pay appears relatively competitive against the benchmark used in this demo."
+            insight = "Your pay appears relatively competitive."
 
-        return render_template_string(
-            DEMO_HTML,
+        return render_template(
+            "demo.html",
             result=True,
             salary=salary,
             global_avg=global_avg,
@@ -1281,7 +1278,7 @@ def demo():
             insight=insight,
         )
 
-    return render_template_string(DEMO_HTML, result=False)
+    return render_template("demo.html", result=False)
 
 if __name__ == "__main__":
     app.run(debug=True)
