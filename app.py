@@ -1,203 +1,928 @@
-export default function NurseBoxWebsite() {
-  const stats = [
-    { value: '1 mission', label: 'Fix nurse underpayment with data' },
-    { value: '24/7', label: 'Visibility into pay, burnout, and retention' },
-    { value: 'Global', label: 'Compare value across countries and roles' },
-  ];
+from flask import Flask, render_template_string
 
-  const features = [
-    {
-      title: 'Know your true value',
-      text: 'NurseBox helps nurses see how their pay compares across countries, specialties, and experience levels.',
-      icon: '💷',
-    },
-    {
-      title: 'Spot burnout early',
-      text: 'Flag staffing pressure, overload, and retention risk before skilled nurses walk away.',
-      icon: '🧠',
-    },
-    {
-      title: 'Push better decisions',
-      text: 'Turn underpayment and shortages into clear evidence that hospitals and governments cannot ignore.',
-      icon: '📊',
-    },
-  ];
+app = Flask(__name__)
 
-  const pillars = [
-    'Pay transparency',
-    'Retention intelligence',
-    'Burnout prediction',
-    'Workforce planning',
-  ];
+HTML = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NurseValue | Pay. Protect. Retain.</title>
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-soft: rgba(255, 255, 255, 0.06);
+      --card: rgba(255, 255, 255, 0.08);
+      --line: rgba(255, 255, 255, 0.12);
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --cyan: #67e8f9;
+      --blue: #60a5fa;
+      --fuchsia: #f0abfc;
+      --emerald: #6ee7b7;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 18px;
+      --maxw: 1220px;
+    }
 
-  return (
-    <div className="min-h-screen bg-slate-950 text-white overflow-x-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.18),transparent_35%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.16),transparent_28%),radial-gradient(circle_at_20%_80%,rgba(236,72,153,0.12),transparent_26%)]" />
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(96,165,250,0.20), transparent 28%),
+        radial-gradient(circle at 88% 10%, rgba(110,231,183,0.16), transparent 23%),
+        radial-gradient(circle at 20% 85%, rgba(240,171,252,0.14), transparent 28%),
+        linear-gradient(180deg, #020617 0%, #030712 45%, #020617 100%);
+      color: var(--text);
+      overflow-x: hidden;
+    }
 
-      <main className="relative mx-auto max-w-7xl px-6 py-8 md:px-10 lg:px-12">
-        <header className="flex items-center justify-between rounded-3xl border border-white/10 bg-white/5 px-5 py-4 backdrop-blur-xl shadow-2xl">
-          <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 text-xl shadow-lg shadow-cyan-500/20">
-              ✚
-            </div>
-            <div>
-              <div className="text-2xl font-black tracking-tight">NurseBox</div>
-              <div className="text-xs uppercase tracking-[0.3em] text-cyan-200/80">Pay. Protect. Retain.</div>
-            </div>
-          </div>
-          <div className="hidden md:flex items-center gap-3 text-sm text-slate-200">
-            <span className="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-2">Built to solve nurse shortages</span>
-          </div>
-        </header>
+    a { color: inherit; text-decoration: none; }
 
-        <section className="grid items-center gap-10 py-16 md:grid-cols-2 md:py-24">
-          <div>
-            <div className="mb-4 inline-flex items-center rounded-full border border-emerald-400/20 bg-emerald-400/10 px-4 py-2 text-sm text-emerald-200">
-              The future of nurse pay intelligence
-            </div>
-            <h1 className="max-w-3xl text-5xl font-black leading-[0.95] tracking-tight md:text-7xl">
-              The website that makes <span className="bg-gradient-to-r from-cyan-300 via-blue-400 to-fuchsia-400 bg-clip-text text-transparent">NurseBox</span> feel real.
-            </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300 md:text-xl">
-              NurseBox is a bold platform idea designed to expose nurse underpayment, predict burnout, and give healthcare systems the evidence they need to make better staffing and pay decisions.
-            </p>
+    .container {
+      width: min(var(--maxw), calc(100% - 32px));
+      margin: 0 auto;
+    }
 
-            <div className="mt-8 flex flex-wrap gap-4">
-              <a
-                href="#features"
-                className="rounded-2xl bg-white px-6 py-3 text-base font-semibold text-slate-950 shadow-xl transition hover:-translate-y-0.5"
-              >
-                Explore NurseBox
-              </a>
-              <a
-                href="#vision"
-                className="rounded-2xl border border-white/15 bg-white/5 px-6 py-3 text-base font-semibold text-white backdrop-blur transition hover:bg-white/10"
-              >
-                See the vision
-              </a>
-            </div>
+    .nav {
+      position: sticky;
+      top: 14px;
+      z-index: 20;
+      padding-top: 14px;
+    }
 
-            <div className="mt-10 grid gap-4 sm:grid-cols-3">
-              {stats.map((stat) => (
-                <div key={stat.label} className="rounded-3xl border border-white/10 bg-white/5 p-5 shadow-lg backdrop-blur">
-                  <div className="text-2xl font-black text-cyan-300">{stat.value}</div>
-                  <div className="mt-2 text-sm leading-6 text-slate-300">{stat.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
+    .nav-shell {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(18px);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+    }
 
-          <div className="relative">
-            <div className="absolute -inset-6 rounded-[2rem] bg-gradient-to-br from-cyan-500/20 via-blue-500/10 to-fuchsia-500/20 blur-2xl" />
-            <div className="relative rounded-[2rem] border border-white/10 bg-slate-900/80 p-6 shadow-2xl backdrop-blur-2xl">
-              <div className="mb-5 flex items-center justify-between">
-                <div>
-                  <div className="text-sm font-medium text-slate-400">Live concept panel</div>
-                  <div className="text-2xl font-bold">Nurse retention risk</div>
-                </div>
-                <div className="rounded-2xl bg-emerald-400/10 px-4 py-2 text-sm font-semibold text-emerald-300">Actionable insight</div>
-              </div>
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-              <div className="space-y-4">
-                <div className="rounded-3xl border border-cyan-400/20 bg-cyan-400/10 p-5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-cyan-100">Ward stress level</span>
-                    <span className="text-sm font-semibold text-cyan-200">High</span>
-                  </div>
-                  <div className="mt-4 h-3 rounded-full bg-white/10">
-                    <div className="h-3 w-[78%] rounded-full bg-gradient-to-r from-cyan-300 to-blue-500" />
-                  </div>
-                </div>
+    .brand-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--cyan), var(--blue), var(--fuchsia));
+      color: #020617;
+      font-weight: 900;
+      font-size: 1.25rem;
+      box-shadow: 0 14px 30px rgba(96, 165, 250, 0.25);
+    }
 
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
-                    <div className="text-sm text-slate-400">Estimated pay gap</div>
-                    <div className="mt-2 text-4xl font-black">£8.2k</div>
-                    <div className="mt-2 text-sm text-slate-300">Average annual difference versus stronger international markets.</div>
-                  </div>
-                  <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
-                    <div className="text-sm text-slate-400">Likely exits in 12 months</div>
-                    <div className="mt-2 text-4xl font-black">31%</div>
-                    <div className="mt-2 text-sm text-slate-300">Retention risk if staffing pressure and pay mismatch continue.</div>
-                  </div>
-                </div>
+    .brand h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
 
-                <div className="rounded-3xl border border-fuchsia-400/20 bg-fuchsia-400/10 p-5">
-                  <div className="text-sm text-fuchsia-200">Decision insight</div>
-                  <div className="mt-2 text-lg font-semibold">
-                    Increasing targeted pay support could cost less than replacing experienced nurses at scale.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+    .brand p {
+      margin: 4px 0 0;
+      font-size: 0.78rem;
+      color: #bae6fd;
+      text-transform: uppercase;
+      letter-spacing: 0.26em;
+    }
 
-        <section id="features" className="py-10 md:py-16">
-          <div className="mb-8 flex items-end justify-between gap-4">
-            <div>
-              <div className="text-sm uppercase tracking-[0.25em] text-slate-400">Why it matters</div>
-              <h2 className="mt-2 text-3xl font-black md:text-5xl">A serious idea with real-world impact</h2>
-            </div>
-          </div>
+    .nav-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: end;
+    }
 
-          <div className="grid gap-6 md:grid-cols-3">
-            {features.map((feature) => (
-              <div
-                key={feature.title}
-                className="group rounded-[2rem] border border-white/10 bg-white/5 p-7 shadow-xl backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:bg-white/10"
-              >
-                <div className="text-4xl">{feature.icon}</div>
-                <h3 className="mt-5 text-2xl font-bold">{feature.title}</h3>
-                <p className="mt-4 text-base leading-7 text-slate-300">{feature.text}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+    .pill,
+    .btn,
+    .ghost-btn {
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-weight: 700;
+      transition: 0.25s ease;
+      border: 1px solid transparent;
+    }
 
-        <section id="vision" className="grid gap-6 py-10 md:grid-cols-[1.1fr_0.9fr] md:py-16">
-          <div className="rounded-[2rem] border border-white/10 bg-gradient-to-br from-white/8 to-white/5 p-8 shadow-xl backdrop-blur-xl">
-            <div className="text-sm uppercase tracking-[0.25em] text-cyan-300">The vision</div>
-            <h2 className="mt-3 text-3xl font-black md:text-5xl">A platform built to make underpayment impossible to ignore</h2>
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">
-              NurseBox brings together nurse salary comparison, staffing risk signals, and retention intelligence in one place. It is not just a website. It is a pressure system for better decisions.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              {pillars.map((pill) => (
-                <span
-                  key={pill}
-                  className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200"
-                >
-                  {pill}
-                </span>
-              ))}
-            </div>
-          </div>
+    .pill {
+      background: rgba(103, 232, 249, 0.10);
+      border-color: rgba(103, 232, 249, 0.22);
+      color: #cffafe;
+      font-size: 0.92rem;
+    }
 
-          <div className="rounded-[2rem] border border-white/10 bg-slate-900/70 p-8 shadow-xl backdrop-blur-xl">
-            <div className="text-sm uppercase tracking-[0.25em] text-fuchsia-300">One sentence</div>
-            <div className="mt-4 text-3xl font-black leading-tight">
-              NurseBox helps nurses understand their true value and gives healthcare systems the evidence to improve pay and staffing.
-            </div>
-            <div className="mt-8 rounded-3xl border border-emerald-400/20 bg-emerald-400/10 p-5">
-              <div className="text-sm text-emerald-200">Why your partner should love this</div>
-              <div className="mt-2 text-base leading-7 text-white/90">
-                It looks premium, feels modern, and turns your idea into something that already feels like a real startup.
-              </div>
-            </div>
-          </div>
-        </section>
+    .btn {
+      background: linear-gradient(135deg, #ffffff, #dbeafe);
+      color: #020617;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 12px 30px rgba(255,255,255,0.12);
+    }
 
-        <section className="py-10 md:py-16">
-          <div className="rounded-[2.25rem] border border-white/10 bg-gradient-to-r from-cyan-500/15 via-blue-500/10 to-fuchsia-500/15 p-8 text-center shadow-2xl backdrop-blur-xl md:p-12">
-            <div className="text-sm uppercase tracking-[0.3em] text-slate-300">NurseBox</div>
-            <h2 className="mt-3 text-4xl font-black md:text-6xl">Built from your idea. Ready to show off.</h2>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-300">
-              A powerful concept deserves a website that feels ambitious, emotional, and unforgettable.
-            </p>
-          </div>
-        </section>
-      </main>
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 36px rgba(255,255,255,0.18);
+    }
+
+    .ghost-btn {
+      background: rgba(255,255,255,0.05);
+      border-color: var(--line);
+      color: white;
+    }
+
+    .ghost-btn:hover {
+      background: rgba(255,255,255,0.09);
+      transform: translateY(-2px);
+    }
+
+    .hero {
+      padding: 42px 0 30px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 30px;
+      align-items: center;
+      min-height: 82vh;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(110,231,183,0.10);
+      border: 1px solid rgba(110,231,183,0.20);
+      color: #d1fae5;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .headline {
+      margin: 18px 0 18px;
+      font-size: clamp(3rem, 7vw, 6.3rem);
+      line-height: 0.95;
+      letter-spacing: -0.06em;
+      font-weight: 950;
+      max-width: 860px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, var(--cyan), var(--blue), var(--fuchsia));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-copy {
+      font-size: 1.16rem;
+      line-height: 1.9;
+      color: var(--muted);
+      max-width: 760px;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .micro-note {
+      margin-top: 14px;
+      color: #93c5fd;
+      font-size: 0.96rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 30px;
+    }
+
+    .stat,
+    .card,
+    .panel,
+    .signup-box,
+    .footer-card {
+      border: 1px solid var(--line);
+      background: var(--card);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+    }
+
+    .stat {
+      padding: 18px;
+      border-radius: 24px;
+    }
+
+    .stat .value {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #a5f3fc;
+      letter-spacing: -0.04em;
+    }
+
+    .stat .label {
+      margin-top: 6px;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.95rem;
+    }
+
+    .panel {
+      border-radius: 34px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: -30% auto auto -20%;
+      width: 240px;
+      height: 240px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(103,232,249,0.18), transparent 68%);
+      pointer-events: none;
+    }
+
+    .panel-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .panel-kicker {
+      color: #94a3b8;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .panel-title {
+      font-size: 1.8rem;
+      font-weight: 900;
+      margin-top: 4px;
+    }
+
+    .status-chip {
+      background: rgba(110,231,183,0.10);
+      border: 1px solid rgba(110,231,183,0.22);
+      color: #d1fae5;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .progress-card,
+    .dual-mini,
+    .insight-card {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: rgba(255,255,255,0.05);
+      padding: 18px;
+    }
+
+    .progress-card {
+      background: linear-gradient(180deg, rgba(34,211,238,0.12), rgba(34,211,238,0.07));
+    }
+
+    .row-between {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .bar {
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.10);
+      margin-top: 14px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      width: 81%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--cyan), var(--blue));
+      border-radius: 999px;
+      box-shadow: 0 0 20px rgba(96,165,250,0.45);
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .dual-mini strong {
+      display: block;
+      font-size: 2.3rem;
+      font-weight: 950;
+      letter-spacing: -0.05em;
+      margin: 6px 0;
+    }
+
+    .section {
+      padding: 50px 0;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 4vw, 4rem);
+      font-weight: 950;
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+      margin: 8px 0 16px;
+    }
+
+    .section-kicker {
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      color: #94a3b8;
+      font-size: 0.84rem;
+      font-weight: 800;
+    }
+
+    .section-copy {
+      color: var(--muted);
+      max-width: 850px;
+      line-height: 1.85;
+      font-size: 1.06rem;
+    }
+
+    .cards-3,
+    .cards-4,
+    .vision-grid,
+    .products-grid,
+    .impact-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .cards-3 { grid-template-columns: repeat(3, 1fr); margin-top: 26px; }
+    .cards-4 { grid-template-columns: repeat(4, 1fr); margin-top: 24px; }
+    .vision-grid { grid-template-columns: 1.08fr 0.92fr; margin-top: 24px; }
+    .products-grid { grid-template-columns: repeat(2, 1fr); margin-top: 26px; }
+    .impact-grid { grid-template-columns: repeat(3, 1fr); margin-top: 26px; }
+
+    .card {
+      padding: 24px;
+      border-radius: 28px;
+      transition: transform 0.25s ease, background 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      background: rgba(255,255,255,0.10);
+    }
+
+    .icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      font-size: 1.6rem;
+      background: linear-gradient(135deg, rgba(103,232,249,0.20), rgba(240,171,252,0.16));
+      border: 1px solid rgba(255,255,255,0.10);
+      margin-bottom: 16px;
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 1.45rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+
+    .card p,
+    .card li {
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .card ul {
+      padding-left: 20px;
+      margin: 14px 0 0;
+    }
+
+    .big-vision,
+    .side-message {
+      border-radius: 30px;
+      padding: 28px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.06);
+      box-shadow: var(--shadow);
+    }
+
+    .big-vision {
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.05));
+    }
+
+    .quote {
+      margin-top: 18px;
+      font-size: 1.25rem;
+      line-height: 1.7;
+      color: #e2e8f0;
+      font-weight: 600;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .tag {
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--line);
+      color: #e2e8f0;
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .signup-box {
+      margin-top: 24px;
+      border-radius: 34px;
+      padding: 30px;
+      background: linear-gradient(135deg, rgba(103,232,249,0.10), rgba(96,165,250,0.08), rgba(240,171,252,0.08));
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    input, select {
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(2, 6, 23, 0.65);
+      color: white;
+      padding: 15px 16px;
+      outline: none;
+      font-size: 1rem;
+    }
+
+    input::placeholder { color: #94a3b8; }
+
+    .submit-btn {
+      border: none;
+      cursor: pointer;
+      border-radius: 16px;
+      padding: 15px 22px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #ffffff, #dbeafe);
+      color: #020617;
+      box-shadow: 0 12px 28px rgba(255,255,255,0.14);
+    }
+
+    .small-muted {
+      color: #94a3b8;
+      font-size: 0.92rem;
+      line-height: 1.7;
+      margin-top: 14px;
+    }
+
+    .footer {
+      padding: 28px 0 60px;
+    }
+
+    .footer-card {
+      border-radius: 34px;
+      padding: 30px;
+      background: linear-gradient(90deg, rgba(103,232,249,0.12), rgba(96,165,250,0.08), rgba(240,171,252,0.10));
+      text-align: center;
+    }
+
+    .footer-card h2 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 4.5rem);
+      line-height: 0.96;
+      font-weight: 950;
+      letter-spacing: -0.05em;
+    }
+
+    .footer-card p {
+      max-width: 760px;
+      margin: 16px auto 0;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 1.08rem;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(26px);
+      transition: 0.8s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1100px) {
+      .hero-grid,
+      .vision-grid,
+      .products-grid,
+      .cards-3,
+      .impact-grid,
+      .cards-4 {
+        grid-template-columns: 1fr;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container { width: min(var(--maxw), calc(100% - 22px)); }
+      .nav-shell { align-items: flex-start; flex-direction: column; }
+      .stats,
+      .mini-grid,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .headline { font-size: 3rem; }
+      .section { padding: 34px 0; }
+      .panel, .card, .big-vision, .side-message, .signup-box, .footer-card { padding: 20px; }
+      .nav-links { width: 100%; justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav container">
+    <div class="nav-shell">
+      <div class="brand">
+        <div class="brand-badge">✚</div>
+        <div>
+          <h1>NurseValue</h1>
+          <p>Pay. Protect. Retain.</p>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="#services" class="ghost-btn">Services</a>
+        <a href="#products" class="ghost-btn">Products</a>
+        <a href="#mission" class="ghost-btn">Mission</a>
+        <a href="#signup" class="btn">Nurses, sign up today</a>
+      </div>
     </div>
-  );
-}
+  </div>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="reveal visible">
+          <div class="eyebrow">Built from care, urgency, and a refusal to stay silent</div>
+          <h2 class="headline">
+            The platform that makes <span class="gradient-text">nurse value</span> impossible to ignore.
+          </h2>
+          <p class="hero-copy">
+            NurseValue is a bold public-interest platform built to expose underpayment, reveal staffing pressure,
+            track retention risk, and arm nurses with transparent data that can push governments, major institutions,
+            professional bodies, and the wider public toward better decisions.
+          </p>
+          <div class="cta-row">
+            <a href="#signup" class="btn">Join the movement</a>
+            <a href="#mission" class="ghost-btn">See our mission</a>
+          </div>
+          <div class="micro-note">
+            We care deeply about this issue. This is not just a website. It is pressure, clarity, and momentum.
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="value">1 mission</div>
+              <div class="label">Make underpayment visible and force action with public, transparent evidence.</div>
+            </div>
+            <div class="stat">
+              <div class="value">24/7</div>
+              <div class="label">Visibility into pay, burnout, retention, and the cost of losing experienced nurses.</div>
+            </div>
+            <div class="stat">
+              <div class="value">Global</div>
+              <div class="label">Compare nurse value across countries, specialties, bands, and experience levels.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel reveal">
+          <div class="panel-top">
+            <div>
+              <div class="panel-kicker">Live concept panel</div>
+              <div class="panel-title">Nurse retention pressure</div>
+            </div>
+            <div class="status-chip">Actionable intelligence</div>
+          </div>
+
+          <div class="progress-card">
+            <div class="row-between">
+              <span>Ward stress level</span>
+              <strong>High</strong>
+            </div>
+            <div class="bar"><div class="bar-fill"></div></div>
+          </div>
+
+          <div class="mini-grid">
+            <div class="dual-mini">
+              <div style="color:#94a3b8;">Estimated pay gap</div>
+              <strong>£8.2k</strong>
+              <div style="color:#cbd5e1;">Average annual difference versus stronger international markets.</div>
+            </div>
+            <div class="dual-mini">
+              <div style="color:#94a3b8;">Likely exits</div>
+              <strong>31%</strong>
+              <div style="color:#cbd5e1;">Projected retention risk if pressure and underpayment continue.</div>
+            </div>
+          </div>
+
+          <div class="insight-card" style="margin-top:14px; background: rgba(240,171,252,0.10); border-color: rgba(240,171,252,0.18);">
+            <div style="color:#f5d0fe; font-size:0.92rem; font-weight:800;">Decision insight</div>
+            <div style="margin-top:8px; font-size:1.06rem; line-height:1.7; color:#f8fafc; font-weight:700;">
+              In many settings, preventing nurse loss costs less than replacing the people the system already depends on.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="services" class="section">
+      <div class="container reveal">
+        <div class="section-kicker">What we do</div>
+        <div class="section-title">Services designed to expose problems and move systems.</div>
+        <p class="section-copy">
+          NurseValue exists to create pressure where pressure is needed. We do not hide behind vague language.
+          We produce transparent data, accessible comparisons, and workforce insight that can help nurses,
+          inform the public, support negotiators, challenge complacency, and put serious pressure on the people and institutions with power.
+        </p>
+
+        <div class="cards-3">
+          <div class="card">
+            <div class="icon">💷</div>
+            <h3>Pay transparency</h3>
+            <p>
+              Show nurses exactly how their pay compares across countries, regions, bands, and specialties,
+              so underpayment becomes measurable instead of invisible.
+            </p>
+          </div>
+          <div class="card">
+            <div class="icon">🧠</div>
+            <h3>Burnout and risk visibility</h3>
+            <p>
+              Surface early warning signs around staffing pressure, overload, retention risk, and the environments most likely to lose talent.
+            </p>
+          </div>
+          <div class="card">
+            <div class="icon">📊</div>
+            <h3>Pressure through evidence</h3>
+            <p>
+              Build public-facing evidence strong enough to shape conversations with governments, health systems, unions,
+              and professional bodies.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="products" class="section">
+      <div class="container reveal">
+        <div class="section-kicker">Products</div>
+        <div class="section-title">A full platform, not just a pretty page.</div>
+        <p class="section-copy">
+          This vision can grow into a serious intelligence platform for nurses and healthcare systems.
+          The public-facing experience builds trust. The product layer drives change.
+        </p>
+
+        <div class="products-grid">
+          <div class="card">
+            <div class="icon">🌍</div>
+            <h3>NurseValue Compare</h3>
+            <p>A global salary and role comparison dashboard that lets nurses see their true market value in seconds.</p>
+            <ul>
+              <li>Country and region comparisons</li>
+              <li>Specialty and seniority breakdowns</li>
+              <li>Visible underpayment scores</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="icon">🏥</div>
+            <h3>Retention intelligence</h3>
+            <p>A workforce analytics layer for understanding where shortages, exits, and pressure are building fastest.</p>
+            <ul>
+              <li>Staffing pressure signals</li>
+              <li>Exit risk and burnout trend mapping</li>
+              <li>High-cost turnover alerts</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="icon">📣</div>
+            <h3>Public evidence hub</h3>
+            <p>A transparent public-facing dashboard for turning hidden workforce pain into visible evidence.</p>
+            <ul>
+              <li>Readable charts and headline figures</li>
+              <li>Campaign-ready statistics</li>
+              <li>Data that can inform public debate</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="icon">🤝</div>
+            <h3>Advocacy support tools</h3>
+            <p>Evidence packs that can strengthen campaigns, raise awareness, and sharpen the pressure placed on decision-makers.</p>
+            <ul>
+              <li>Negotiation support data</li>
+              <li>Retention cost summaries</li>
+              <li>Policy-facing insight</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="mission" class="section">
+      <div class="container reveal">
+        <div class="section-kicker">Our mission</div>
+        <div class="section-title">Built from conviction. Powered by transparency.</div>
+
+        <div class="vision-grid">
+          <div class="big-vision">
+            <p class="section-copy" style="max-width:none; margin-top:0;">
+              We deeply care about the reality nurses face: the pressure, the exhaustion, the sense of being undervalued,
+              and the silence around what that really costs. NurseValue exists because this issue deserves more than sympathy.
+              It deserves clarity, evidence, and a platform powerful enough to shift the conversation.
+            </p>
+            <div class="quote">
+              “We want to turn underpayment from a hidden frustration into something visible, undeniable, and impossible to brush aside.”
+            </div>
+            <div class="tag-row">
+              <span class="tag">Public transparency</span>
+              <span class="tag">Nurse-first design</span>
+              <span class="tag">Retention insight</span>
+              <span class="tag">Pressure for change</span>
+            </div>
+          </div>
+
+          <div class="side-message">
+            <div class="section-kicker" style="color:#f5d0fe;">Who we aim to influence</div>
+            <p class="section-copy" style="max-width:none; margin-top:10px;">
+              Governments. Health systems. Large employers. Professional institutions. Public debate. And yes,
+              where appropriate, unions and major nursing bodies too. The goal is not noise for the sake of noise.
+              The goal is focused pressure backed by data that people can see and understand.
+            </p>
+            <div class="card" style="padding:18px; margin-top:18px; border-radius:22px; background: rgba(110,231,183,0.08);">
+              <h3 style="margin:0 0 8px; font-size:1.1rem;">Personal promise</h3>
+              <p style="margin:0;">
+                We are building this because we believe nurses deserve to be seen properly, valued properly, and defended with something stronger than empty words.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container reveal">
+        <div class="section-kicker">Why it matters</div>
+        <div class="section-title">What NurseValue can change.</div>
+        <p class="section-copy">
+          This platform is designed to shift attention from vague outrage to concrete evidence. That is where change gets traction.
+        </p>
+
+        <div class="impact-grid">
+          <div class="card">
+            <div class="icon">🔍</div>
+            <h3>Make the invisible visible</h3>
+            <p>Expose pay gaps, staffing strain, and retention risk in a form that nurses and the public can actually use.</p>
+          </div>
+          <div class="card">
+            <div class="icon">⚖️</div>
+            <h3>Strengthen accountability</h3>
+            <p>Make it harder for decision-makers to ignore the cost of underpaying and overstretching the workforce.</p>
+          </div>
+          <div class="card">
+            <div class="icon">🚀</div>
+            <h3>Ignite momentum</h3>
+            <p>Give people a rallying point: a platform that feels ambitious, credible, and emotionally real from day one.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="signup" class="section">
+      <div class="container reveal">
+        <div class="signup-box">
+          <div class="section-kicker" style="color:#cffafe;">Join NurseValue</div>
+          <div class="section-title" style="margin-top:10px; font-size: clamp(2rem, 4vw, 3.6rem);">Nurses, sign up today.</div>
+          <p class="section-copy" style="max-width:900px;">
+            Be part of the first wave. Help build the data, shape the movement, and give this platform the nurse voices it needs.
+            Your sign-up is not just interest. It is signal.
+          </p>
+
+          <form class="form-grid" onsubmit="event.preventDefault(); document.getElementById('thanks').style.display='block';">
+            <input type="text" placeholder="Your name" aria-label="Your name">
+            <input type="email" placeholder="Email address" aria-label="Email address">
+            <select aria-label="Role">
+              <option selected>Nurse / Midwife / Supporter</option>
+              <option>Registered Nurse</option>
+              <option>Student Nurse</option>
+              <option>Nurse Leader</option>
+              <option>Healthcare Supporter</option>
+            </select>
+            <button class="submit-btn" type="submit">Count me in</button>
+          </form>
+
+          <div id="thanks" style="display:none; margin-top:16px; color:#d1fae5; font-weight:800;">
+            Thank you — this is where movements begin.
+          </div>
+
+          <div class="small-muted">
+            Demo sign-up only. You can later connect this to a real database, mailing list, or waitlist form.
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container reveal">
+      <div class="footer-card">
+        <div class="section-kicker" style="color:#e2e8f0;">NurseValue</div>
+        <h2>Built to blow minds. Built to move hearts. Built to push change.</h2>
+        <p>
+          This is the kind of idea that can start as a beautiful landing page and grow into a serious force.
+          Show it. Share it. Build it. Make people feel what it could become.
+        </p>
+        <div class="cta-row" style="justify-content:center; margin-top:24px;">
+          <a href="#signup" class="btn">Show her the vision</a>
+          <a href="#services" class="ghost-btn">Explore the platform</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach((el, index) => {
+      if (!el.classList.contains('visible')) {
+        el.style.transitionDelay = `${index * 60}ms`;
+      }
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>
+"""
+
+@app.route("/")
+def home():
+    return render_template_string(HTML)
+
+if __name__ == "__main__":
+    app.run(debug=True)
