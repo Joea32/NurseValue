@@ -75,10 +75,18 @@ hr {
   background:rgba(255,255,255,0.2);
   margin:15px 0;
 }
+
+.back-link {
+  display:inline-block;
+  margin-bottom:20px;
+  color:#93c5fd;
+}
 </style>
 </head>
 
 <body>
+
+<a class="back-link" href="/">← Back to NurseValue</a>
 
 <div class="box">
 
@@ -112,16 +120,15 @@ hr {
 <hr>
 
 <div class="highlight bad">
-You are earning £{{us_gap}} compared to US equivalents ({{us_percent}}%)
+You are earning £{{us_gap}} less than US equivalents ({{us_percent}}%)
 </div>
 
 <div class="highlight bad">
-You are earning £{{aus_gap}} compared to Australian equivalents ({{aus_percent}}%)
+You are earning £{{aus_gap}} less than Australian equivalents ({{aus_percent}}%)
 </div>
 
 <hr>
 
-<!-- 🚀 NEW INTELLIGENCE BLOCK (ADDED ONLY) -->
 <h3>🧠 Deeper Insight</h3>
 
 <p><b>Your global position:</b> {{position}}</p>
@@ -148,8 +155,6 @@ not just in money, but in experience and patient safety.
 
 </div>
 {% endif %}
-
-<!-- ================= EVERYTHING BELOW IS UNCHANGED ================= -->
 
 <h2>🏥 What This Means For a Hospital</h2>
 
