@@ -686,10 +686,21 @@ HTML = """
       .panel, .card, .big-vision, .side-message, .signup-box, .footer-card { padding: 20px; }
       .nav-links { width: 100%; justify-content: flex-start; }
       .logo, .brand-badge { width: 46px; height: 46px; }
-    }
-  </style>
+      .floating-logo {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 70px;
+  height: auto;
+  z-index: 999;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  }
+
+</style>
 </head>
 <body>
+<img src="/static/logo.png" class="floating-logo">
   <div class="nav container">
     <div class="nav-shell">
       <div class="brand">
