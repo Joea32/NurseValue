@@ -673,6 +673,16 @@ HTML = """
       }
     }
 
+    .floating-logo {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  z-index: 999;
+}
+
     @media (max-width: 720px) {
       .container { width: min(var(--maxw), calc(100% - 22px)); }
       .nav-shell { align-items: flex-start; flex-direction: column; }
@@ -686,16 +696,6 @@ HTML = """
       .panel, .card, .big-vision, .side-message, .signup-box, .footer-card { padding: 20px; }
       .nav-links { width: 100%; justify-content: flex-start; }
       .logo, .brand-badge { width: 46px; height: 46px; }
-
-      .floating-logo {
-  position: fixed;
-  top: 12px;
-  right: 12px;
-  width: 40px;   /* 👈 smaller */
-  height: 40px;  /* 👈 keep it square */
-  object-fit: contain;
-  z-index: 999;
-}
 
 </style>
 </head>
