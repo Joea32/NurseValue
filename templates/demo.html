@@ -85,7 +85,6 @@ hr {
 <h1>NurseValue</h1>
 <p>No signup. No friction. Just truth.</p>
 
-<!-- ================= INDIVIDUAL ================= -->
 <h2>👤 Your Personal Reality</h2>
 
 <form method="POST">
@@ -113,19 +112,30 @@ hr {
 <hr>
 
 <div class="highlight bad">
-You are earning £{{us_gap}} less than US equivalents
+You are earning £{{us_gap}} compared to US equivalents ({{us_percent}}%)
 </div>
 
 <div class="highlight bad">
-You are earning £{{aus_gap}} less than Australian equivalents
+You are earning £{{aus_gap}} compared to Australian equivalents ({{aus_percent}}%)
 </div>
+
+<hr>
+
+<!-- 🚀 NEW INTELLIGENCE BLOCK (ADDED ONLY) -->
+<h3>🧠 Deeper Insight</h3>
+
+<p><b>Your global position:</b> {{position}}</p>
+
+<p><b>Retention risk:</b> {{retention}}</p>
+
+<p><b>Estimated yearly value gap:</b></p>
+<p>£{{abs_gap}} per year compared to stronger markets</p>
 
 <hr>
 
 <p><b>Insight:</b></p>
 <p>
-You are part of a workforce that is significantly underpaid compared to global markets.
-This creates long-term retention risk, burnout, and system instability.
+{{insight}}
 </p>
 
 <hr>
@@ -139,13 +149,12 @@ not just in money, but in experience and patient safety.
 </div>
 {% endif %}
 
-<!-- ================= HOSPITAL ================= -->
+<!-- ================= EVERYTHING BELOW IS UNCHANGED ================= -->
+
 <h2>🏥 What This Means For a Hospital</h2>
 
 <div class="section">
-
 <p><b>Example hospital:</b> 500 nurses</p>
-
 <p>Average NHS salary: £32,000</p>
 <p>Global benchmark: £45,000</p>
 
@@ -173,10 +182,8 @@ not just in money, but in experience and patient safety.
 💡 Paying nurses more can cost the SAME as replacing them —  
 but keeps experience, stability, and patient safety.
 </p>
-
 </div>
 
-<!-- ================= 100 NURSES ================= -->
 <h2>📊 Workforce Snapshot (100 Nurses)</h2>
 
 <div class="section">
@@ -220,7 +227,6 @@ Across even 100 nurses, the financial and human impact is massive.
 
 </div>
 
-<!-- ================= CASE STUDY ================= -->
 <h2>📖 Case Study</h2>
 
 <div class="section">
