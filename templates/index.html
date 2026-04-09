@@ -3,18 +3,76 @@
 <head>
 <title>NurseValue Demo</title>
 <style>
-body { font-family: Arial; background:#020617; color:white; padding:40px; }
-.box { background:rgba(255,255,255,0.05); padding:25px; border-radius:20px; max-width:550px; margin:auto; }
-input, select { width:100%; padding:12px; margin-top:10px; border-radius:10px; border:none; }
-button { margin-top:15px; padding:12px; width:100%; background:white; color:black; font-weight:bold; border-radius:10px; }
-.result { margin-top:20px; padding:15px; background:rgba(255,255,255,0.08); border-radius:15px; }
+body {
+  font-family: Arial;
+  background:#020617;
+  color:white;
+  padding:40px;
+}
+
+.box {
+  background:rgba(255,255,255,0.05);
+  padding:25px;
+  border-radius:20px;
+  max-width:700px;
+  margin:auto;
+}
+
+input, select {
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border-radius:10px;
+  border:none;
+}
+
+button {
+  margin-top:15px;
+  padding:12px;
+  width:100%;
+  background:white;
+  color:black;
+  font-weight:bold;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.section {
+  margin-top:25px;
+  padding:18px;
+  background:rgba(255,255,255,0.08);
+  border-radius:15px;
+}
+
+.result {
+  margin-top:20px;
+  padding:18px;
+  background:rgba(255,255,255,0.12);
+  border-radius:15px;
+}
+
+h1, h2, h3 {
+  margin-bottom:10px;
+}
+
+hr {
+  border:0;
+  height:1px;
+  background:rgba(255,255,255,0.2);
+  margin:15px 0;
+}
 </style>
 </head>
+
 <body>
 
 <div class="box">
+
 <h1>NurseValue</h1>
-<p>No signup. Just truth.</p>
+<p>No signup. No friction. Just truth.</p>
+
+<!-- ================= INDIVIDUAL ================= -->
+<h2>👤 Your Personal Reality</h2>
 
 <form method="POST">
 <select name="band">
@@ -30,11 +88,12 @@ button { margin-top:15px; padding:12px; width:100%; background:white; color:blac
 
 {% if result %}
 <div class="result">
-<h3>Your Reality</h3>
+
+<h3>Your Result</h3>
 
 <p><b>Your salary:</b> £{{salary}}</p>
 <p><b>Global average:</b> £{{global_avg}}</p>
-<p><b>Gap:</b> {{gap}}%</p>
+<p><b>Pay gap:</b> {{gap}}%</p>
 
 <hr>
 
@@ -43,10 +102,128 @@ button { margin-top:15px; padding:12px; width:100%; background:white; color:blac
 
 <hr>
 
-<p><b>System truth:</b></p>
-<p>Replacing nurses costs more than paying them fairly.</p>
+<p><b>What this means:</b></p>
+<p>
+If many nurses are in the same position, the system is losing value every single year.
+</p>
+
 </div>
 {% endif %}
+
+<!-- ================= HOSPITAL ================= -->
+<h2>🏥 What This Means For a Hospital</h2>
+
+<div class="section">
+
+<p><b>Example hospital:</b> 500 nurses</p>
+
+<p>Average NHS salary: £32,000</p>
+<p>Global benchmark: £45,000</p>
+
+<hr>
+
+<p><b>Underpayment per nurse:</b> ~£13,000</p>
+<p><b>Total annual gap:</b> £6,500,000</p>
+
+<hr>
+
+<p><b>Estimated exits (20%):</b> 100 nurses</p>
+<p><b>Replacement cost per nurse:</b> £25,000</p>
+
+<p><b>Total replacement cost:</b> £2,500,000</p>
+
+<hr>
+
+<p><b>Alternative approach:</b></p>
+<p>Increase pay by £5,000 → cost = £2,500,000</p>
+
+<hr>
+
+<p><b>Insight:</b></p>
+<p>
+💡 Paying nurses more can cost the SAME as replacing them —  
+but keeps experience, stability, and patient safety.
+</p>
+
+</div>
+
+<!-- ================= 100 NURSES ================= -->
+<h2>📊 Workforce Snapshot (100 Nurses)</h2>
+
+<div class="section">
+
+<p><b>Sample group:</b> 100 nurses</p>
+
+<ul>
+<li>Band 5: 60 nurses (£28k avg)</li>
+<li>Band 6: 30 nurses (£35k avg)</li>
+<li>Band 7: 10 nurses (£43k avg)</li>
+</ul>
+
+<hr>
+
+<p><b>Global equivalents:</b></p>
+<ul>
+<li>Band 5: £47k</li>
+<li>Band 6: £60k</li>
+<li>Band 7: £72k</li>
+</ul>
+
+<hr>
+
+<p><b>Average underpayment:</b> ~35%</p>
+
+<p><b>Total annual gap (100 nurses):</b></p>
+<p><b>≈ £1.5M – £2M</b></p>
+
+<hr>
+
+<p><b>Estimated exits:</b> 15–25 nurses</p>
+<p><b>Replacement cost:</b> £375k – £625k</p>
+
+<hr>
+
+<p><b>Insight:</b></p>
+<p>
+This is not a small issue.  
+Across even 100 nurses, the financial and human impact is massive.
+</p>
+
+</div>
+
+<!-- ================= CASE STUDY ================= -->
+<h2>📖 Case Study</h2>
+
+<div class="section">
+
+<p><b>Scenario:</b> NHS Trust under pressure</p>
+
+<ul>
+<li>High burnout</li>
+<li>Staff leaving internationally</li>
+<li>Heavy reliance on agency staff</li>
+</ul>
+
+<hr>
+
+<p><b>Without NurseValue:</b></p>
+<p>Problems are felt — but not clearly measured.</p>
+
+<p><b>With NurseValue:</b></p>
+<ul>
+<li>Clear pay gap visibility</li>
+<li>Retention risk measurable</li>
+<li>Cost of inaction quantified</li>
+</ul>
+
+<hr>
+
+<p><b>Impact:</b></p>
+<p>
+Better decisions. Stronger negotiations. Public awareness.
+</p>
+
+</div>
 
 </div>
 
