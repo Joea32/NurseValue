@@ -47,8 +47,22 @@ button {
 .result {
   margin-top:20px;
   padding:18px;
-  background:rgba(255,255,255,0.12);
+  background:rgba(96,165,250,0.15);
   border-radius:15px;
+}
+
+.highlight {
+  font-size:1.3rem;
+  font-weight:bold;
+  margin-top:10px;
+}
+
+.bad {
+  color:#f87171;
+}
+
+.good {
+  color:#6ee7b7;
 }
 
 h1, h2, h3 {
@@ -92,19 +106,34 @@ hr {
 <h3>Your Result</h3>
 
 <p><b>Your salary:</b> £{{salary}}</p>
-<p><b>Global average:</b> £{{global_avg}}</p>
-<p><b>Pay gap:</b> {{gap}}%</p>
+<p><b>UK average:</b> £{{uk_avg}}</p>
+<p><b>US average:</b> £{{us_avg}}</p>
+<p><b>Australia average:</b> £{{aus_avg}}</p>
+
+<hr>
+
+<div class="highlight bad">
+You are earning £{{us_gap}} less than US equivalents
+</div>
+
+<div class="highlight bad">
+You are earning £{{aus_gap}} less than Australian equivalents
+</div>
 
 <hr>
 
 <p><b>Insight:</b></p>
-<p>{{insight}}</p>
+<p>
+You are part of a workforce that is significantly underpaid compared to global markets.
+This creates long-term retention risk, burnout, and system instability.
+</p>
 
 <hr>
 
-<p><b>What this means:</b></p>
+<p><b>Reality:</b></p>
 <p>
-If many nurses are in the same position, the system is losing value every single year.
+If many nurses are in the same position, the system is losing millions every year —
+not just in money, but in experience and patient safety.
 </p>
 
 </div>
