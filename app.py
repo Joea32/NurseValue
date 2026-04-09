@@ -1259,23 +1259,67 @@ def demo():
             salary = 0
 
         band = request.form["band"]
-        global_avg = get_global_average(band)
 
-        gap = max(0, int(((global_avg - salary) / global_avg) * 100))
+        # UK averages
+        uk_data = {
+            "Band 5": 28000,
+            "Band 6": 35000,
+            "Band 7": 43000
+        }
 
-        if gap > 30:
-            insight = "You appear to be significantly underpaid compared to stronger international benchmarks."
-        elif gap > 10:
-            insight = "You may be underpaid compared to international benchmarks."
+        # US averages
+        us_data = {
+            "Band 5": 50000,
+            "Band 6": 65000,
+            "Band 7": 80000
+        }
+
+        # Australia averages
+        aus_data = {
+            "Band 5": 47000,
+            "Band 6": 60000,
+            "Band 7": 72000
+        }
+
+        uk_avg = uk_data[band]
+        us_avg = us_data[band]
+        aus_avg = aus_data[band]
+
+        us_gap = us_avg - salary
+        aus_gap = aus_avg - salary
+
+        us_percent = int((us_gap / us_avg) * 100)
+        aus_percent = int((aus_gap / aus_avg) * 100)
+
+        abs_gap = int((us_gap + aus_gap) / 2)
+
+        if us_percent > 30:
+            position = "Significantly underpaid globally"
+            retention = "High risk of leaving"
+            insight = "You are far below international benchmarks."
+        elif us_percent > 10:
+            position = "Moderately underpaid"
+            retention = "Medium risk"
+            insight = "You may be underpaid depending on conditions."
         else:
-            insight = "Your pay appears relatively competitive."
+            position = "Competitive"
+            retention = "Low risk"
+            insight = "Your pay is relatively competitive."
 
         return render_template(
             "demo.html",
             result=True,
             salary=salary,
-            global_avg=global_avg,
-            gap=gap,
+            uk_avg=uk_avg,
+            us_avg=us_avg,
+            aus_avg=aus_avg,
+            us_gap=us_gap,
+            aus_gap=aus_gap,
+            us_percent=us_percent,
+            aus_percent=aus_percent,
+            abs_gap=abs_gap,
+            position=position,
+            retention=retention,
             insight=insight,
         )
 
