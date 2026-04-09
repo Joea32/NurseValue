@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>NurseValue Demo</title>
+<style>
+body { font-family: Arial; background:#020617; color:white; padding:40px; }
+.box { background:rgba(255,255,255,0.05); padding:25px; border-radius:20px; max-width:550px; margin:auto; }
+input, select { width:100%; padding:12px; margin-top:10px; border-radius:10px; border:none; }
+button { margin-top:15px; padding:12px; width:100%; background:white; color:black; font-weight:bold; border-radius:10px; }
+.result { margin-top:20px; padding:15px; background:rgba(255,255,255,0.08); border-radius:15px; }
+</style>
+</head>
+<body>
+
+<div class="box">
+<h1>NurseValue</h1>
+<p>No signup. Just truth.</p>
+
+<form method="POST">
+<select name="band">
+<option>Band 5</option>
+<option>Band 6</option>
+<option>Band 7</option>
+</select>
+
+<input name="salary" placeholder="Your salary (£)" required>
+
+<button type="submit">Reveal My Value</button>
+</form>
+
+{% if result %}
+<div class="result">
+<h3>Your Reality</h3>
+
+<p><b>Your salary:</b> £{{salary}}</p>
+<p><b>Global average:</b> £{{global_avg}}</p>
+<p><b>Gap:</b> {{gap}}%</p>
+
+<hr>
+
+<p><b>Insight:</b></p>
+<p>{{insight}}</p>
+
+<hr>
+
+<p><b>System truth:</b></p>
+<p>Replacing nurses costs more than paying them fairly.</p>
+</div>
+{% endif %}
+
+</div>
+
+</body>
+</html>
