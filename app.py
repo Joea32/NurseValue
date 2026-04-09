@@ -1,4 +1,4 @@
-from flask import Flask, render_template_string
+from flask import Flask, render_template_string, request
 
 app = Flask(__name__)
 
@@ -30,6 +30,7 @@ HTML = """
 
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
+
     body {
       margin: 0;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -40,6 +41,39 @@ HTML = """
         linear-gradient(180deg, #020617 0%, #030712 45%, #020617 100%);
       color: var(--text);
       overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      width: 360px;
+      height: 360px;
+      border-radius: 999px;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.22;
+      animation: floatBlob 12s ease-in-out infinite;
+    }
+
+    body::before {
+      background: var(--cyan);
+      top: 5%;
+      left: -120px;
+    }
+
+    body::after {
+      background: var(--fuchsia);
+      right: -120px;
+      top: 50%;
+      animation-delay: 2s;
+    }
+
+    @keyframes floatBlob {
+      0%, 100% { transform: translateY(0px) translateX(0px) scale(1); }
+      50% { transform: translateY(-25px) translateX(18px) scale(1.08); }
     }
 
     a { color: inherit; text-decoration: none; }
@@ -47,6 +81,8 @@ HTML = """
     .container {
       width: min(var(--maxw), calc(100% - 32px));
       margin: 0 auto;
+      position: relative;
+      z-index: 1;
     }
 
     .nav {
@@ -75,9 +111,19 @@ HTML = """
       gap: 12px;
     }
 
+    .logo {
+      width: 52px;
+      height: 52px;
+      object-fit: cover;
+      border-radius: 16px;
+      box-shadow: 0 14px 30px rgba(96, 165, 250, 0.25);
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+    }
+
     .brand-badge {
-      width: 48px;
-      height: 48px;
+      width: 52px;
+      height: 52px;
       border-radius: 16px;
       display: grid;
       place-items: center;
@@ -86,6 +132,7 @@ HTML = """
       font-weight: 900;
       font-size: 1.25rem;
       box-shadow: 0 14px 30px rgba(96, 165, 250, 0.25);
+      border: 1px solid rgba(255,255,255,0.12);
     }
 
     .brand h1 {
@@ -120,6 +167,7 @@ HTML = """
       font-weight: 700;
       transition: 0.25s ease;
       border: 1px solid transparent;
+      position: relative;
     }
 
     .pill {
@@ -154,6 +202,33 @@ HTML = """
       transform: translateY(-2px);
     }
 
+    .glow-btn {
+      position: relative;
+      overflow: visible;
+    }
+
+    .glow-btn::before {
+      content: "";
+      position: absolute;
+      inset: -3px;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #67e8f9, #60a5fa, #f0abfc, #67e8f9);
+      background-size: 300% 300%;
+      z-index: -1;
+      animation: glowMove 4s linear infinite;
+      filter: blur(10px);
+      opacity: 0.9;
+    }
+
+    .glow-btn:hover {
+      transform: translateY(-3px) scale(1.02);
+    }
+
+    @keyframes glowMove {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 300% 50%; }
+    }
+
     .hero {
       padding: 42px 0 30px;
     }
@@ -177,6 +252,12 @@ HTML = """
       border-radius: 999px;
       font-size: 0.92rem;
       font-weight: 700;
+      animation: softFloat 5s ease-in-out infinite;
+    }
+
+    @keyframes softFloat {
+      0%,100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
     }
 
     .headline {
@@ -236,6 +317,11 @@ HTML = """
     .stat {
       padding: 18px;
       border-radius: 24px;
+      transition: transform 0.3s ease;
+    }
+
+    .stat:hover {
+      transform: translateY(-5px);
     }
 
     .stat .value {
@@ -257,6 +343,12 @@ HTML = """
       padding: 24px;
       position: relative;
       overflow: hidden;
+      animation: panelFloat 6s ease-in-out infinite;
+    }
+
+    @keyframes panelFloat {
+      0%,100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
     }
 
     .panel::before {
@@ -335,6 +427,13 @@ HTML = """
       background: linear-gradient(90deg, var(--cyan), var(--blue));
       border-radius: 999px;
       box-shadow: 0 0 20px rgba(96,165,250,0.45);
+      animation: pulseBar 2.2s ease-in-out infinite;
+      transform-origin: left;
+    }
+
+    @keyframes pulseBar {
+      0%,100% { transform: scaleX(1); }
+      50% { transform: scaleX(0.96); }
     }
 
     .mini-grid {
@@ -397,14 +496,15 @@ HTML = """
     .card {
       padding: 24px;
       border-radius: 28px;
-      transition: transform 0.25s ease, background 0.25s ease;
+      transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
       position: relative;
       overflow: hidden;
     }
 
     .card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-7px);
       background: rgba(255,255,255,0.10);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.35);
     }
 
     .icon {
@@ -585,6 +685,7 @@ HTML = """
       .section { padding: 34px 0; }
       .panel, .card, .big-vision, .side-message, .signup-box, .footer-card { padding: 20px; }
       .nav-links { width: 100%; justify-content: flex-start; }
+      .logo, .brand-badge { width: 46px; height: 46px; }
     }
   </style>
 </head>
@@ -592,7 +693,8 @@ HTML = """
   <div class="nav container">
     <div class="nav-shell">
       <div class="brand">
-        <div class="brand-badge">✚</div>
+        <img src="/static/logo.png" class="logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
+        <div class="brand-badge" style="display:none;">✚</div>
         <div>
           <h1>NurseValue</h1>
           <p>Pay. Protect. Retain.</p>
@@ -621,6 +723,7 @@ HTML = """
             professional bodies, and the wider public toward better decisions.
           </p>
           <div class="cta-row">
+            <a href="/demo" class="btn glow-btn">Try NurseValue →</a>
             <a href="#signup" class="btn">Join the movement</a>
             <a href="#mission" class="ghost-btn">See our mission</a>
           </div>
@@ -893,7 +996,7 @@ HTML = """
           Show it. Share it. Build it. Make people feel what it could become.
         </p>
         <div class="cta-row" style="justify-content:center; margin-top:24px;">
-          <a href="#signup" class="btn">Show her the vision</a>
+          <a href="/demo" class="btn glow-btn">Try NurseValue →</a>
           <a href="#services" class="ghost-btn">Explore the platform</a>
         </div>
       </div>
@@ -920,9 +1023,265 @@ HTML = """
 </html>
 """
 
+DEMO_HTML = """
+<!DOCTYPE html>
+<html>
+<head>
+<title>NurseValue Demo</title>
+<style>
+body {
+  font-family: Arial;
+  background:#020617;
+  color:white;
+  padding:40px;
+}
+
+.box {
+  background:rgba(255,255,255,0.05);
+  padding:25px;
+  border-radius:20px;
+  max-width:700px;
+  margin:auto;
+}
+
+input, select {
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border-radius:10px;
+  border:none;
+}
+
+button {
+  margin-top:15px;
+  padding:12px;
+  width:100%;
+  background:white;
+  color:black;
+  font-weight:bold;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.section {
+  margin-top:25px;
+  padding:18px;
+  background:rgba(255,255,255,0.08);
+  border-radius:15px;
+}
+
+.result {
+  margin-top:20px;
+  padding:18px;
+  background:rgba(255,255,255,0.12);
+  border-radius:15px;
+}
+
+h1, h2, h3 {
+  margin-bottom:10px;
+}
+
+hr {
+  border:0;
+  height:1px;
+  background:rgba(255,255,255,0.2);
+  margin:15px 0;
+}
+
+.back-link {
+  display:inline-block;
+  margin-bottom:20px;
+  color:#93c5fd;
+}
+</style>
+</head>
+
+<body>
+<a class="back-link" href="/">← Back to NurseValue</a>
+
+<div class="box">
+
+<h1>NurseValue</h1>
+<p>No signup. No friction. Just truth.</p>
+
+<h2>👤 Your Personal Reality</h2>
+
+<form method="POST">
+<select name="band">
+<option>Band 5</option>
+<option>Band 6</option>
+<option>Band 7</option>
+</select>
+
+<input name="salary" placeholder="Your salary (£)" required>
+
+<button type="submit">Reveal My Value</button>
+</form>
+
+{% if result %}
+<div class="result">
+<h3>Your Result</h3>
+
+<p><b>Your salary:</b> £{{salary}}</p>
+<p><b>Global average:</b> £{{global_avg}}</p>
+<p><b>Pay gap:</b> {{gap}}%</p>
+
+<hr>
+
+<p><b>Insight:</b></p>
+<p>{{insight}}</p>
+
+<hr>
+
+<p><b>What this means:</b></p>
+<p>If many nurses are in the same position, the system is losing value every single year.</p>
+</div>
+{% endif %}
+
+<h2>🏥 What This Means For a Hospital</h2>
+
+<div class="section">
+<p><b>Example hospital:</b> 500 nurses</p>
+<p>Average NHS salary: £32,000</p>
+<p>Global benchmark: £45,000</p>
+
+<hr>
+
+<p><b>Underpayment per nurse:</b> ~£13,000</p>
+<p><b>Total annual gap:</b> £6,500,000</p>
+
+<hr>
+
+<p><b>Estimated exits (20%):</b> 100 nurses</p>
+<p><b>Replacement cost per nurse:</b> £25,000</p>
+<p><b>Total replacement cost:</b> £2,500,000</p>
+
+<hr>
+
+<p><b>Alternative approach:</b></p>
+<p>Increase pay by £5,000 → cost = £2,500,000</p>
+
+<hr>
+
+<p><b>Insight:</b></p>
+<p>💡 Paying nurses more can cost the SAME as replacing them — but keeps experience, stability, and patient safety.</p>
+</div>
+
+<h2>📊 Workforce Snapshot (100 Nurses)</h2>
+
+<div class="section">
+<p><b>Sample group:</b> 100 nurses</p>
+
+<ul>
+<li>Band 5: 60 nurses (£28k avg)</li>
+<li>Band 6: 30 nurses (£35k avg)</li>
+<li>Band 7: 10 nurses (£43k avg)</li>
+</ul>
+
+<hr>
+
+<p><b>Global equivalents:</b></p>
+<ul>
+<li>Band 5: £47k</li>
+<li>Band 6: £60k</li>
+<li>Band 7: £72k</li>
+</ul>
+
+<hr>
+
+<p><b>Average underpayment:</b> ~35%</p>
+<p><b>Total annual gap (100 nurses):</b> ≈ £1.5M – £2M</p>
+
+<hr>
+
+<p><b>Estimated exits:</b> 15–25 nurses</p>
+<p><b>Replacement cost:</b> £375k – £625k</p>
+
+<hr>
+
+<p><b>Insight:</b></p>
+<p>This is not a small issue. Across even 100 nurses, the financial and human impact is massive.</p>
+</div>
+
+<h2>📖 Case Study</h2>
+
+<div class="section">
+<p><b>Scenario:</b> NHS Trust under pressure</p>
+
+<ul>
+<li>High burnout</li>
+<li>Staff leaving internationally</li>
+<li>Heavy reliance on agency staff</li>
+</ul>
+
+<hr>
+
+<p><b>Without NurseValue:</b></p>
+<p>Problems are felt — but not clearly measured.</p>
+
+<p><b>With NurseValue:</b></p>
+<ul>
+<li>Clear pay gap visibility</li>
+<li>Retention risk measurable</li>
+<li>Cost of inaction quantified</li>
+</ul>
+
+<hr>
+
+<p><b>Impact:</b></p>
+<p>Better decisions. Stronger negotiations. Public awareness.</p>
+</div>
+
+</div>
+</body>
+</html>
+"""
+
+def get_global_average(band):
+    data = {
+        "Band 5": int((47000 + 50000) / 2),
+        "Band 6": int((60000 + 65000) / 2),
+        "Band 7": int((72000 + 80000) / 2),
+    }
+    return data[band]
+
 @app.route("/")
 def home():
     return render_template_string(HTML)
+
+@app.route("/demo", methods=["GET", "POST"])
+def demo():
+    if request.method == "POST":
+        try:
+            salary = int(request.form["salary"])
+        except ValueError:
+            salary = 0
+
+        band = request.form["band"]
+        global_avg = get_global_average(band)
+
+        if global_avg > 0:
+            gap = max(0, int(((global_avg - salary) / global_avg) * 100))
+        else:
+            gap = 0
+
+        if gap > 30:
+            insight = "You appear to be significantly underpaid compared to stronger international benchmarks for similar nursing roles."
+        elif gap > 10:
+            insight = "You may be underpaid compared to international benchmarks, depending on role, setting, and working conditions."
+        else:
+            insight = "Your pay appears relatively competitive against the benchmark used in this demo."
+
+        return render_template_string(
+            DEMO_HTML,
+            result=True,
+            salary=salary,
+            global_avg=global_avg,
+            gap=gap,
+            insight=insight,
+        )
+
+    return render_template_string(DEMO_HTML, result=False)
 
 if __name__ == "__main__":
     app.run(debug=True)
