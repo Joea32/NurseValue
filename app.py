@@ -675,10 +675,10 @@ HTML = """
 
     .floating-logo {
   position: fixed;
-  top: 12px;
-  right: 12px;
-  width: 300px;
-  height: 300px;
+  top: 14px;
+  right: 14px;
+  width: 200px;
+  height: 200px;
   object-fit: contain;
   z-index: 999;
 }
