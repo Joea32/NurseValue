@@ -673,15 +673,6 @@ HTML = """
       }
     }
 
-    .floating-logo {
-  position: fixed;
-  top: 20px;
-  right: 14px;
-  width: 150px;
-  height: 90px;
-  object-fit: contain;
-  z-index: 999;
-}
 
     @media (max-width: 720px) {
       .container { width: min(var(--maxw), calc(100% - 22px)); }
