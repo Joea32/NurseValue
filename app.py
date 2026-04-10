@@ -691,7 +691,6 @@ HTML = """
 </style>
 </head>
 <body>
-<img src="/static/logo.png" class="floating-logo">
   <div class="nav container">
     <div class="nav-shell">
       <div class="brand">
