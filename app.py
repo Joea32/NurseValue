@@ -675,7 +675,7 @@ HTML = """
 
     .floating-logo {
   position: fixed;
-  top: 17px;
+  top: 20px;
   right: 14px;
   width: 200px;
   height: 200px;
